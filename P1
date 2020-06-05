@@ -1,0 +1,40 @@
+import requests
+import numpy as np
+import matplotlib.pyplot as plt
+from bs4 import BeautifulSoup
+
+
+x=str(input("Enter Company Code "))
+y=int(input("Enter no of days "))
+url="https://finance.yahoo.com/quote/"+x+"/history/"
+text=requests.get(url)
+soup=BeautifulSoup(text.content,'html.parser')
+val=soup.find_all('td',class_="Py(10px) Pstart(10px)")
+
+
+open=[]
+high=[]
+low=[]
+close=[]
+
+for i,j in enumerate(val):
+  if i%6==0:
+    open.append(j.text)
+  elif i%6==1:
+    high.append(j.text)
+  elif i%6==2:
+    low.append(j.text)
+  elif i%6==3:
+    close.append(j.text)
+
+for i in range(y):
+  print(open[i]+" "+ high[i]+" "+ low[i]+" "+close[i])
+  
+x=np.arange(len(open))
+plt.plot(x,open)
+x1=np.arange(len(high))
+plt.plot(x,high)
+x2=np.arange(len(low))
+plt.plot(x,low)
+x3=np.arange(len(close))
+plt.plot(x,close)
